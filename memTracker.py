@@ -2,9 +2,9 @@
 # coding: UTF-8
 
 """
-memTracker -- Utility Tool for Linux
+memTracker -- Utility Tool for Linux with Procfs (Process Filesystem)
 
-Track energy consumption of your device with Adafruit INA219 chip.
+Track memory usage of specified process.
 """
 
 __author__  = "Hiroyuki Matsuo <h-matsuo@ist.osaka-u.ac.jp>"
