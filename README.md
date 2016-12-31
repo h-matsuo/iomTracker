@@ -28,3 +28,7 @@ Python 2.x 系での動作を確認しています．
 <output_path>
         データの出力ファイルを指定できます．
 ```
+
+## License
+
+MIT License.
