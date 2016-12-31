@@ -90,10 +90,13 @@ class TrackController:
         """
         while not self.stop_flag:
             begin = datetime.today()
+            tracked_data = self.__getTrackedData()
+            if tracked_data == None:
+                break
             if self.does_export:
-                self.tracked_data["data"].append(self.__getTrackedData())
+                self.tracked_data["data"].append(tracked_data)
             else:
-                print json.dumps(self.__getTrackedData(), indent = 2, separators = (",", ": "))
+                print json.dumps(tracked_data, indent = 2, separators = (",", ": "))
             end = datetime.today()
 
             diff = self.interval - (end - begin).total_seconds()
@@ -109,6 +112,8 @@ class TrackController:
             fin = open("/proc/%d/status" % self.pid, "r")
         except IOError:
             self.stop()
+            print "Process %d terminated." % self.pid
+            return None
         data = fin.read().split("\n")
         fin.close()
         self.vmpeak = int(data[15][7:-2].strip())
