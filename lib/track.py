@@ -94,7 +94,7 @@ class TrackController:
             begin = datetime.today()
             tracked_data = self.__getTrackedData()
             if tracked_data == None:
-                break
+                continue
             if self.does_export:
                 self.tracked_data["data"].append(tracked_data)
             else:
@@ -116,20 +116,30 @@ class TrackController:
             self.stop()
             print "Process %d terminated." % self.pid
             return None
-        for line in fin:
+        status = fin.readlines()
+        n_item = 0
+        for line in status:
             if line.startswith('VmPeak'):
                 self.vmpeak = int(line[7:-3].strip())
+                n_item += 1
                 continue
             if line.startswith('VmSize'):
                 vmsize      = int(line[7:-3].strip())
+                n_item += 1
                 continue
             if line.startswith('VmHWM'):
                 self.vmhwm  = int(line[6:-3].strip())
+                n_item += 1
                 continue
             if line.startswith('VmRSS'):
                 vmrss       = int(line[6:-3].strip())
+                n_item += 1
+                continue
+            if n_item == 4:
                 break
         fin.close()
+        if n_item < 4:
+            return None
         return {
             "date"  : Utils.formatDatetime(now),
             "vmsize": vmsize,
