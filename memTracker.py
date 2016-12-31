@@ -25,7 +25,7 @@ def main():
 
     # Print usage if pid is not specified
     if len(argv) < 3:
-        Utils.printUsage()
+        sys.stderr.write(Utils.getUsage())
         sys.exit(1)
 
     # Execute tracking

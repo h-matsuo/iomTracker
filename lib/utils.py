@@ -13,14 +13,14 @@ class Utils:
     """
 
     @staticmethod
-    def printUsage():
+    def getUsage():
         """
-        Print usage to standard output
+        Get usage
         """
-        fin = open("usage.txt")
-        for line in fin:
-            print line.rstrip()
+        fin = open("usage.txt", "r")
+        usage = fin.read()
         fin.close()
+        return usage
 
     @staticmethod
     def formatDatetime(datetime_obj):

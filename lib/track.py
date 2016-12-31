@@ -11,6 +11,7 @@ from datetime import datetime
 import json
 import os.path
 import signal
+import sys
 import time
 
 from lib.utils import Utils
@@ -40,6 +41,9 @@ class TrackController:
 
         @param process ID
         """
+        if not os.path.exists("/proc/%d" % pid):
+            sys.stderr.write("ERROR: PID %d: No such process.\n" % pid)
+            sys.exit(1)
         self.pid = pid
 
     def setInterval(self, interval):
@@ -63,8 +67,6 @@ class TrackController:
         """
         Start tracking
         """
-        if not os.path.exists("/proc/%d" % self.pid):
-            raise Exception("ERROR: PID %d: No such process." % self.pid)
         self.__track()
 
     def stop(self):
