@@ -116,14 +116,24 @@ class TrackController:
             self.stop()
             print "Process %d terminated." % self.pid
             return None
-        data = fin.read().split("\n")
+        for line in fin:
+            if line.startswith('VmPeak'):
+                self.vmpeak = int(line[7:-3].strip())
+                continue
+            if line.startswith('VmSize'):
+                vmsize      = int(line[7:-3].strip())
+                continue
+            if line.startswith('VmHWM'):
+                self.vmhwm  = int(line[6:-3].strip())
+                continue
+            if line.startswith('VmRSS'):
+                vmrss       = int(line[6:-3].strip())
+                break
         fin.close()
-        self.vmpeak = int(data[15][7:-2].strip())
-        self.vmhwm  = int(data[19][6:-2].strip())
         return {
             "date"  : Utils.formatDatetime(now),
-            "vmsize": int(data[16][7:-2].strip()),
-            "vmrss" : int(data[20][6:-2].strip())
+            "vmsize": vmsize,
+            "vmrss" : vmrss
         }
 
 def SIGINTHandler(signum, frame):
