@@ -112,11 +112,11 @@ class TrackController:
         now = datetime.today()
         try:
             fin = open("/proc/%d/status" % self.pid, "r")
+            status = fin.readlines()
         except IOError:
             self.stop()
             print "Process %d terminated." % self.pid
             return None
-        status = fin.readlines()
         n_item = 0
         for line in status:
             if line.startswith('VmPeak'):
