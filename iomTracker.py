@@ -2,9 +2,9 @@
 # coding: UTF-8
 
 """
-memTracker -- Utility Tool for Linux with Procfs (Process Filesystem)
+iomTracker -- Utility Tool for Linux with Procfs (Process Filesystem)
 
-Track memory usage of specified process.
+Track IO and memory usage of specified process.
 """
 
 __author__  = "Hiroyuki Matsuo <h-matsuo@ist.osaka-u.ac.jp>"
@@ -23,7 +23,7 @@ def main():
 
     # Check if executed as root
     if os.getuid() != 0:
-      sys.stderr.write("Sorry, memTracker must be executed as root user.\n")
+      sys.stderr.write("Sorry, iomTracker must be executed as root user.\n")
       sys.exit(1)
 
     # Get command line args (argv)
