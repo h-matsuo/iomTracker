@@ -9,6 +9,7 @@ Track memory usage of specified process.
 
 __author__  = "Hiroyuki Matsuo <h-matsuo@ist.osaka-u.ac.jp>"
 
+import os
 import sys
 
 from lib.utils import Utils
@@ -19,6 +20,11 @@ def SIGINTHandler(signum, frame):
     controller.stop()
 
 def main():
+
+    # Check if executed as root
+    if os.getuid() != 0:
+      sys.stderr.write("Sorry, memTracker must be executed as root user.\n")
+      sys.exit(1)
 
     # Get command line args (argv)
     argv = sys.argv
