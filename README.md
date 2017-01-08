@@ -2,7 +2,7 @@
 
 Utility Tool for Linux with [Procfs](https://en.wikipedia.org/wiki/Procfs) (Process Filesystem) by [Hiroyuki Matsuo](http://sdl.ist.osaka-u.ac.jp/~h-matsuo/)
 
-Track I/O statistics and memory usage of specified process.
+Track I/O statistics, network device statistics and memory usage of specified process.
 
 ## Installation
 
@@ -18,8 +18,8 @@ $ git clone git@github.com:h-matsuo/iomTracker.git
 Usage: sudo python iomTracker.py <pid> <interval> [<output_path>]
 
 iomTracker は，procfs (process filesystem) を備えた Linux システム上で，
-指定したプロセスの I/O 統計情報およびメモリ使用量を監視することができるユーティリティツールです．
-Python 2.x 系での動作を確認しています．
+指定したプロセスの I/O 統計情報，ネットワークデバイス統計情報およびメモリ使用量を監視することが
+できるユーティリティツールです．Python 2.x 系での動作を確認しています．
 
 <pid>
         監視したいプロセスの ID を指定します．
