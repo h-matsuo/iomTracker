@@ -10,6 +10,7 @@ __author__  = "Hiroyuki Matsuo <h-matsuo@ist.osaka-u.ac.jp>"
 from datetime import datetime
 import json
 import os.path
+import re
 import signal
 import sys
 import time
@@ -34,6 +35,11 @@ class TrackController:
         self.does_export = False
         # Default output: standard output
         self.output_path = None
+        # Compile regex pattern for analyzing "/proc/net/dev"
+        self.pattern = re.compile(r"\s*") # Raw string to avoid the backslash plagu
+        # Initialize valiables for analyzing "/proc/net/dev"
+        self.rec_bytes_begin = -1
+        self.snd_bytes_begin = -1
 
     def setPid(self, pid):
         """
@@ -111,12 +117,15 @@ class TrackController:
         """
         now = datetime.today()
         try:
-            fin = open("/proc/%d/status" % self.pid, "r")
-            status = fin.readlines()
-            fin.close()
-            fin = open("/proc/%d/io" % self.pid, "r")
-            io = fin.readlines()
-            fin.close()
+            fin_status = open("/proc/%d/status"  % self.pid, "r")
+            fin_io     = open("/proc/%d/io"      % self.pid, "r")
+            fin_dev    = open("/proc/%d/net/dev" % self.pid, "r")
+            status  = fin_status.readlines()
+            io      = fin_io.readlines()
+            net_dev = fin_dev.readlines()
+            fin_status.close()
+            fin_io.close()
+            fin_dev.close()
         except IOError:
             self.stop()
             print "Process %d terminated." % self.pid
@@ -167,6 +176,20 @@ class TrackController:
                 continue
         if n_item < 4:
             return None
+        # Analyze /proc/net/dev
+        rec_bytes = 0
+        snd_bytes = 0
+        for line in net_dev:
+            line = self.pattern.split(line.strip())
+            if line[0].find(":") < 0:
+                continue
+            rec_bytes += int(line[1])
+            snd_bytes += int(line[9])
+        if self.rec_bytes_begin < 0:
+            self.rec_bytes_begin = rec_bytes
+            self.snd_bytes_begin = snd_bytes
+        rec_bytes = rec_bytes - self.rec_bytes_begin
+        snd_bytes = snd_bytes - self.snd_bytes_begin
         return {
             "date"       : Utils.formatDatetime(now),
             "vmsize"     : vmsize,
@@ -174,7 +197,9 @@ class TrackController:
             "rchar"      : rchar,
             "wchar"      : wchar,
             "read_bytes" : read_bytes,
-            "write_bytes": write_bytes
+            "write_bytes": write_bytes,
+            "rec_bytes"  : rec_bytes,
+            "snd_bytes"  : snd_bytes
         }
 
 def SIGINTHandler(signum, frame):
