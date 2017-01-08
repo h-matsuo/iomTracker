@@ -4,7 +4,7 @@
 """
 iomTracker -- Utility Tool for Linux with Procfs (Process Filesystem)
 
-Track IO and memory usage of specified process.
+Track I/O statistics and memory usage of specified process.
 """
 
 __author__  = "Hiroyuki Matsuo <h-matsuo@ist.osaka-u.ac.jp>"

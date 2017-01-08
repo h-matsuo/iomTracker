@@ -1,7 +1,7 @@
 Usage: sudo python iomTracker.py <pid> <interval> [<output_path>]
 
 iomTracker は，procfs (process filesystem) を備えた Linux システム上で，
-指定したプロセスの IO およびメモリ使用量を監視することができるユーティリティツールです．
+指定したプロセスの I/O 統計情報およびメモリ使用量を監視することができるユーティリティツールです．
 Python 2.x 系での動作を確認しています．
 
 <pid>
