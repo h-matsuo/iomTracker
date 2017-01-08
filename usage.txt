@@ -1,7 +1,7 @@
-Usage: python memTracker.py <pid> <interval> [<output_path>]
+Usage: sudo python iomTracker.py <pid> <interval> [<output_path>]
 
-memTracker は，procfs (process filesystem) を備えた Linux システム上で，
-指定したプロセスのメモリ使用量を監視することができるユーティリティツールです．
+iomTracker は，procfs (process filesystem) を備えた Linux システム上で，
+指定したプロセスの I/O 統計情報およびメモリ使用量を監視することができるユーティリティツールです．
 Python 2.x 系での動作を確認しています．
 
 <pid>

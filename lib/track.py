@@ -113,37 +113,68 @@ class TrackController:
         try:
             fin = open("/proc/%d/status" % self.pid, "r")
             status = fin.readlines()
+            fin.close()
+            fin = open("/proc/%d/io" % self.pid, "r")
+            io = fin.readlines()
+            fin.close()
         except IOError:
             self.stop()
             print "Process %d terminated." % self.pid
             return None
+        # Analyze /proc/<PID>/status
         n_item = 0
         for line in status:
-            if line.startswith('VmPeak'):
+            if line.startswith("VmPeak"):
                 self.vmpeak = int(line[7:-3].strip())
                 n_item += 1
                 continue
-            if line.startswith('VmSize'):
+            if line.startswith("VmSize"):
                 vmsize      = int(line[7:-3].strip())
                 n_item += 1
                 continue
-            if line.startswith('VmHWM'):
+            if line.startswith("VmHWM"):
                 self.vmhwm  = int(line[6:-3].strip())
                 n_item += 1
                 continue
-            if line.startswith('VmRSS'):
+            if line.startswith("VmRSS"):
                 vmrss       = int(line[6:-3].strip())
                 n_item += 1
                 continue
             if n_item == 4:
                 break
-        fin.close()
+        if n_item < 4:
+            return None
+        # Analyze /proc/<PID>/io
+        n_item = 0
+        for line in io:
+            if n_item == 4:
+                break
+            if line.startswith("rchar:"):
+                rchar       = int(line[7:-1])
+                n_item += 1
+                continue
+            if line.startswith("wchar:"):
+                wchar       = int(line[7:-1])
+                n_item += 1
+                continue
+            if line.startswith("read_bytes:"):
+                read_bytes  = int(line[12:-1])
+                n_item += 1
+                continue
+            if line.startswith("write_bytes:"):
+                write_bytes = int(line[13:-1])
+                n_item += 1
+                continue
         if n_item < 4:
             return None
         return {
-            "date"  : Utils.formatDatetime(now),
-            "vmsize": vmsize,
-            "vmrss" : vmrss
+            "date"       : Utils.formatDatetime(now),
+            "vmsize"     : vmsize,
+            "vmrss"      : vmrss,
+            "rchar"      : rchar,
+            "wchar"      : wchar,
+            "read_bytes" : read_bytes,
+            "write_bytes": write_bytes
         }
 
 def SIGINTHandler(signum, frame):
