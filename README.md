@@ -1,32 +1,36 @@
-# iomTracker
+# procTracker
 
 Utility Tool for Linux with [Procfs](https://en.wikipedia.org/wiki/Procfs) (Process Filesystem) by [Hiroyuki Matsuo](http://sdl.ist.osaka-u.ac.jp/~h-matsuo/)
 
-Track I/O statistics, network device statistics and memory usage of specified process.
+Track disk I/O, memory usage and network communications.
 
 ## Installation
 
 Just clone this repository.
 
 ```bash
-$ git clone git@github.com:h-matsuo/iomTracker.git
+$ git clone git@github.com:h-matsuo/procTracker.git
 ```
 
 ## Usage
 
 ```txt
-Usage: sudo python iomTracker.py <pid> <interval> [<output_path>]
+usage: procTracker.py [-h] [-i <interval>] [-o <filename>] [--all] [--io]
+                      [--mem] [--net]
 
-iomTracker は，procfs (process filesystem) を備えた Linux システム上で，
-指定したプロセスの I/O 統計情報，ネットワークデバイス統計情報およびメモリ使用量を監視することが
-できるユーティリティツールです．Python 2.x 系での動作を確認しています．
+track disk I/O, memory usage and network devices
 
-<pid>
-        監視したいプロセスの ID を指定します．
-<interval>
-        データを取得する間隔を秒単位で指定します．
-<output_path>
-        データの出力ファイルを指定できます．
+optional arguments:
+  -h, --help     show this help message and exit
+  -i <interval>  set the tracking interval in [sec]; default = 1.0
+  -o <filename>  write output to <filename>
+
+tracking mode:
+  --all          track all of the disk I/O, memory usage and network devices;
+                 default mode
+  --io           track disk I/O; allowed with --mem and --net
+  --mem          track memory usage; allowed with --io and --net
+  --net          track network devices; allowed with --io and --mem
 ```
 
 ## License
