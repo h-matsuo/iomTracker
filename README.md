@@ -18,7 +18,7 @@ $ git clone git@github.com:h-matsuo/procTracker.git
 usage: procTracker.py [-h] [-i <interval>] [-o <filename>] [--all] [--io]
                       [--mem] [--net]
 
-track disk I/O, memory usage and network devices
+track disk I/O, memory usage and network communications
 
 optional arguments:
   -h, --help     show this help message and exit
@@ -26,11 +26,11 @@ optional arguments:
   -o <filename>  write output to <filename>
 
 tracking mode:
-  --all          track all of the disk I/O, memory usage and network devices;
-                 default mode
+  --all          track all of the disk I/O, memory usage and network
+                 communications; default mode
   --io           track disk I/O; allowed with --mem and --net
   --mem          track memory usage; allowed with --io and --net
-  --net          track network devices; allowed with --io and --mem
+  --net          track network communications; allowed with --io and --mem
 ```
 
 ## License
