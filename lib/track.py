@@ -137,7 +137,7 @@ class TrackController:
 
     def __track(self):
         """
-        Track INA219 repeatedly
+        Track procfs repeatedly
         """
         while not self.__stop_flag:
             begin = datetime.today()

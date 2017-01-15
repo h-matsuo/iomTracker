@@ -8,7 +8,6 @@ Utilities for internal implementation
 __author__  = "Hiroyuki Matsuo <h-matsuo@ist.osaka-u.ac.jp>"
 
 from argparse import ArgumentParser
-import sys
 
 class Utils:
     """
@@ -38,11 +37,10 @@ class Utils:
         return datetime_obj.strftime("%Y/%m/%d-%H:%M:%S.") + "%03d" % (datetime_obj.microsecond // 1000)
 
     @staticmethod
-    def parseArgv(argv):
+    def parseArgv():
         """
-        Received the command line arguments and parse them
+        Parse the command line arguments
 
-        @param argv Command line arguments
         @return Result of parsing
         """
         parser = ArgumentParser(prog        = Utils.prog_name,
@@ -85,19 +83,13 @@ class Utils:
         result = parser.parse_args()
 
         if result.interval <= 0:
-            parser.print_usage(file = sys.stderr)
-            sys.stderr.write("%s: error: interval must be more than 0\n" % Utils.prog_name)
-            sys.exit(1)
+            parser.error("interval must be more than 0")
 
         # if result.pid != None and result.pid < 1:
-        #     parser.print_usage(file = sys.stderr)
-        #     sys.stderr.write("%s: error: process id must be 1 or more\n" % Utils.prog_name)
-        #     sys.exit(1)
+        #     parser.error("process id must be 1 or more")
 
         if result.mode_all and (result.mode_io or result.mode_mem or result.mode_net):
-            parser.print_usage(file = sys.stderr)
-            sys.stderr.write("%s: error: cannot use --all with --io, --mem and --net\n" % Utils.prog_name)
-            sys.exit(1)
+            parser.error("cannot use --all with --io, --mem and --net")
 
         # Default tracking mode is --all
         if not result.mode_io and not result.mode_mem and not result.mode_net:

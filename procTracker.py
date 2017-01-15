@@ -17,11 +17,8 @@ from lib.track import exec_track
 
 def main():
 
-    # Get command line args (argv)
-    argv = sys.argv
-
-    # Parse argv
-    result = Utils.parseArgv(argv)
+    # Parse command line args
+    result = Utils.parseArgv()
 
     # Check if procfs (process filesystem) is enabled
     if not os.path.exists("/proc"):
