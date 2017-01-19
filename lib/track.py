@@ -117,6 +117,10 @@ class TrackController:
             total_data = self.__getIOTotalData()
             self.__io_read_bytes_begin  = total_data["total_read_bytes"]
             self.__io_write_bytes_begin = total_data["total_write_bytes"]
+        # Initialize valiables for analyzing "/proc/meminfo"
+        if self.__mode_mem:
+            total_data = self.__getMemTotalData()
+            self.__mem_used_kilobytes_begin = total_data["used_kilobytes"]
         # Initialize valiables for analyzing "/proc/net/dev"
         if self.__mode_net:
             total_data = self.__getNetTotalData()
@@ -187,11 +191,9 @@ class TrackController:
 
         @return Memory usage data
         """
-        fin = open("/proc/meminfo", "r")
-        meminfo = fin.readlines()
-        fin.close()
+        total_data = self.__getMemTotalData()
         return {
-            "used_kilobytes": int(meminfo[MEMINFO_ROW_TOTAL][9:-3].strip()) - int(meminfo[MEMINFO_ROW_FREE][8:-3].strip())
+            "used_kilobytes": total_data["used_kilobytes"] - self.__mem_used_kilobytes_begin
         }
 
     def __getNetData(self):
@@ -219,6 +221,19 @@ class TrackController:
         return {
             "total_read_bytes" : int(diskstats[DISKSTATS_COL_READ])  * SECTOR_SIZE,
             "total_write_bytes": int(diskstats[DISKSTATS_COL_WRITE]) * SECTOR_SIZE
+        }
+
+    def __getMemTotalData(self):
+        """
+        Get data from "/proc/meminfo"
+
+        @return Analyzed data
+        """
+        fin = open("/proc/meminfo", "r")
+        meminfo = fin.readlines()
+        fin.close()
+        return {
+            "used_kilobytes": int(meminfo[MEMINFO_ROW_TOTAL][9:-3].strip()) - int(meminfo[MEMINFO_ROW_FREE][8:-3].strip())
         }
 
     def __getNetTotalData(self):
